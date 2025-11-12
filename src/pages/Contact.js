@@ -10,7 +10,7 @@ const contactOption = [
     icon: <FaMessage className=" text-richblack-100 text-[25px]"></FaMessage>,
     heading: "Chat on us",
     description: "Our friendly team is here to help.",
-    info: "ankan.hazra1710@gmail.com",
+    info: "gargkapilgarg10@gmail.com",
   },
   {
     icon: (

@@ -9,59 +9,115 @@ const { passwordUpdated } = require("../mail/templates/passwordUpdate");
 require("dotenv").config();
 
 // Send OTP
+// exports.sendOTP = async (req, res) => {
+//   try {
+//     // Fetch email from request body
+//     const { email } = req.body;
+
+//     // Check if user already exist
+//     const checkUserPresent = await User.findOne({ email });
+
+//     // If user already exists, then return response
+//     if (checkUserPresent) {
+//       return res.status(401).json({
+//         success: false,
+//         message: "User already registered",
+//       });
+//     }
+
+//     // Else Generate OTP   -> need modification from 22 - 40
+//     var otp = otpGenerator.generate(6, {
+//       upperCaseAlphabets: false,
+//       lowerCaseAlphabets: false,
+//       specialChars: false,
+//     });
+
+//     let result = await OTP.findOne({ otp: otp });
+
+//     while (result) {
+//       otp = otpGenerator.generate(6, {
+//         upperCaseAlphabets: false,
+//         lowerCaseAlphabets: false,
+//         specialChars: false,
+//       });
+//       result = await OTP.findOne({ otp: otp });
+//     }
+
+//     // create db entry
+//     const otpPayload = { email, otp };
+
+//     const otpBody = await OTP.create(otpPayload);
+//     console.log(otpBody);
+
+//     res.status(200).json({
+//       success: true,
+//       message: "OTP sent successfully",
+//       otp,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     return res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
 exports.sendOTP = async (req, res) => {
   try {
-    // Fetch email from request body
     const { email } = req.body;
+    console.log("📩 Request to send OTP received for:", email);
 
-    // Check if user already exist
     const checkUserPresent = await User.findOne({ email });
-
-    // If user already exists, then return response
     if (checkUserPresent) {
+      console.log("❌ User already registered:", email);
       return res.status(401).json({
         success: false,
         message: "User already registered",
       });
     }
 
-    // Else Generate OTP   -> need modification from 22 - 40
-    var otp = otpGenerator.generate(6, {
+    // Generate OTP
+    let otp = otpGenerator.generate(6, {
       upperCaseAlphabets: false,
       lowerCaseAlphabets: false,
       specialChars: false,
     });
+    console.log("🔢 Generated OTP:", otp);
 
-    let result = await OTP.findOne({ otp: otp });
+    const otpBody = await OTP.create({ email, otp });
+    console.log("💾 OTP saved in DB:", otpBody);
 
-    while (result) {
-      otp = otpGenerator.generate(6, {
-        upperCaseAlphabets: false,
-        lowerCaseAlphabets: false,
-        specialChars: false,
+    // Try to send mail
+    try {
+      await mailSender(
+        email,
+        "Your StudyNotion OTP",
+        `<h2>Your OTP is:</h2><h1>${otp}</h1>`
+      );
+      console.log(`✅ OTP email sent successfully to ${email}`);
+    } catch (mailError) {
+      console.error("❌ Failed to send OTP email:", mailError);
+      return res.status(500).json({
+        success: false,
+        message: "Error sending OTP email",
       });
-      result = await OTP.findOne({ otp: otp });
     }
-
-    // create db entry
-    const otpPayload = { email, otp };
-
-    const otpBody = await OTP.create(otpPayload);
-    console.log(otpBody);
 
     res.status(200).json({
       success: true,
       message: "OTP sent successfully",
-      otp,
     });
   } catch (error) {
-    console.error(error);
-    return res.status(500).json({
+    console.error("🔥 Error in sendOTP:", error);
+    res.status(500).json({
       success: false,
-      message: error.message,
+      message: "Could not send OTP",
     });
   }
 };
+
 
 // SignUp
 exports.signUp = async (req, res) => {
