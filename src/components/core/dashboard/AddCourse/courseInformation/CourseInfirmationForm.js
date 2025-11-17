@@ -1019,6 +1019,546 @@
 
 
 
+// import React, { useEffect, useState } from "react";
+// import { useForm } from "react-hook-form";
+// import { HiOutlineCurrencyRupee } from "react-icons/hi";
+// import {
+//   addCourse,
+//   editCourseDetails,
+//   fetchCourseCategories,
+// } from "../../../../../services/operations/courseDetailsAPI";
+// import { useDispatch, useSelector } from "react-redux";
+// import RequirmentsField from "./RequirmentsField";
+// import { setCourse, setStep } from "../../../../../redux/slices/courseSlice";
+// import UploadField from "./UploadField";
+// import { COURSE_STATUS } from "../../../../../utils/constants";
+// import ChipInput from "./ChipInput";
+// import toast from "react-hot-toast";
+// import { IoIosArrowForward } from "react-icons/io";
+
+// const CourseInformationForm = () => {
+//   const [loading, setLoading] = useState(false);
+//   const [courseCategories, setCourseCategories] = useState([]);
+
+//   const { course, editCourse } = useSelector((state) => state.course);
+//   const { token } = useSelector((state) => state.auth);
+//   const dispatch = useDispatch();
+
+//   const {
+//     register,
+//     handleSubmit,
+//     setValue,
+//     getValues,
+//     formState: { errors },
+//   } = useForm();
+
+//   // -----------------------------
+//   // Fetch Categories
+//   // -----------------------------
+//   const getCategories = async () => {
+//     setLoading(true);
+//     const categories = await fetchCourseCategories();
+//     if (categories.length > 0) setCourseCategories(categories);
+//     setLoading(false);
+//   };
+
+//   // -----------------------------
+//   // Prefill values in edit mode
+//   // -----------------------------
+//   useEffect(() => {
+//     getCategories();
+
+//     if (editCourse) {
+//       setValue("courseTitle", course.courseName);
+//       setValue("courseShortDesc", course.courseDescription);
+//       setValue("coursePrice", course.price);
+//       setValue("courseTags", course.tag);
+//       setValue("courseBenefits", course.whatYouWillLearn);
+//       setValue("courseCategory", course.category?._id);
+//       setValue("courseRequirements", course.instructions);
+//       setValue("thumbnailImage", null);
+//     }
+//   }, []);
+
+//   // -----------------------------
+//   // Submit Handler
+//   // -----------------------------
+//   const handleOnSubmit = async (data) => {
+//     const formData = new FormData();
+
+//     // EDIT MODE
+//     if (editCourse) {
+//       formData.append("courseId", course._id);
+
+//       if (data.courseTitle !== course.courseName)
+//         formData.append("courseName", data.courseTitle);
+
+//       if (data.courseShortDesc !== course.courseDescription)
+//         formData.append("courseDescription", data.courseShortDesc);
+
+//       if (data.coursePrice !== course.price)
+//         formData.append("price", data.coursePrice);
+
+//       if (JSON.stringify(data.courseTags) !== JSON.stringify(course.tag))
+//         formData.append("tag", JSON.stringify(data.courseTags));
+
+//       if (data.courseBenefits !== course.whatYouWillLearn)
+//         formData.append("whatYouWillLearn", data.courseBenefits);
+
+//       if (data.courseCategory !== course.category?._id)
+//         formData.append("category", data.courseCategory);
+
+//       if (
+//         JSON.stringify(data.courseRequirements) !==
+//         JSON.stringify(course.instructions)
+//       )
+//         formData.append(
+//           "instructions",
+//           JSON.stringify(data.courseRequirements)
+//         );
+
+//       // NEW THUMBNAIL
+//       if (data.thumbnailImage && typeof data.thumbnailImage !== "string") {
+//         formData.append("thumbnailImage", data.thumbnailImage);
+//       }
+
+//       setLoading(true);
+//       const result = await editCourseDetails(formData, token);
+//       setLoading(false);
+
+//       if (result) {
+//         dispatch(setCourse(result));
+//         dispatch(setStep(2));
+//       }
+//       return;
+//     }
+
+//     // CREATE NEW COURSE
+//     formData.append("courseName", data.courseTitle);
+//     formData.append("courseDescription", data.courseShortDesc);
+//     formData.append("price", data.coursePrice);
+
+//     // IMPORTANT FIX
+//     formData.append("tag", JSON.stringify(data.courseTags));
+//     formData.append("instructions", JSON.stringify(data.courseRequirements));
+
+//     formData.append("whatYouWillLearn", data.courseBenefits);
+//     formData.append("category", data.courseCategory);
+
+//     formData.append("thumbnailImage", data.thumbnailImage);
+//     formData.append("status", COURSE_STATUS.DRAFT);
+
+//     setLoading(true);
+//     const result = await addCourse(formData, token);
+//     setLoading(false);
+
+//     if (result) {
+//       dispatch(setCourse(result));
+//       dispatch(setStep(2));
+//     }
+//   };
+
+//   return (
+//     <form
+//       className="w-full p-4 bg-richblack-800 border border-richblack-700 rounded-md flex flex-col gap-6"
+//       onSubmit={handleSubmit(handleOnSubmit)}
+//     >
+//       {/* TITLE */}
+//       <label>
+//         <p className="mb-1 text-[0.875rem] text-richblack-5">Course Title</p>
+//         <input
+//           {...register("courseTitle", { required: true })}
+//           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
+//           placeholder="Enter Course Title"
+//         />
+//       </label>
+
+//       {/* DESCRIPTION */}
+//       <label>
+//         <p className="mb-1 text-[0.875rem] text-richblack-5">Short Description</p>
+//         <textarea
+//           {...register("courseShortDesc", { required: true })}
+//           rows="3"
+//           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
+//         />
+//       </label>
+
+//       {/* PRICE */}
+//       <label className="relative">
+//         <p className="mb-1 text-[0.875rem] text-richblack-5">Course Price</p>
+//         <HiOutlineCurrencyRupee className="absolute left-2 top-[2.6rem] text-richblack-300 text-xl" />
+//         <input
+//           {...register("coursePrice", { required: true })}
+//           className="w-full bg-richblack-700 rounded p-[12px] pl-8 text-richblack-5"
+//         />
+//       </label>
+
+//       {/* CATEGORY */}
+//       <label>
+//         <p className="text-[0.875rem] text-richblack-5 mb-1">Category</p>
+//         <select
+//           {...register("courseCategory", { required: true })}
+//           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
+//         >
+//           <option value="" disabled>
+//             Choose Category
+//           </option>
+//           {!loading &&
+//             courseCategories.map((cat) => (
+//               <option key={cat._id} value={cat._id}>
+//                 {cat.name}
+//               </option>
+//             ))}
+//         </select>
+//       </label>
+
+//       {/* TAGS */}
+//       <ChipInput
+//         label="Tags"
+//         name="courseTags"
+//         register={register}
+//         setValue={setValue}
+//         getValues={getValues}
+//         errors={errors}
+//       />
+
+//       {/* THUMBNAIL */}
+//       <UploadField
+//         name="thumbnailImage"
+//         label="Course Thumbnail"
+//         register={register}
+//         setValue={setValue}
+//         errors={errors}
+//         editData={editCourse ? course.thumbnail : null}
+//       />
+
+//       {/* BENEFITS */}
+//       <label>
+//         <p className="text-[0.875rem] mb-1 text-richblack-5">
+//           What You Will Learn
+//         </p>
+//         <textarea
+//           {...register("courseBenefits", { required: true })}
+//           rows="3"
+//           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
+//           placeholder="Enter benefits"
+//         />
+//       </label>
+
+//       {/* REQUIREMENTS */}
+//       <RequirmentsField
+//         name="courseRequirements"
+//         register={register}
+//         setValue={setValue}
+//         getValues={getValues}
+//         errors={errors}
+//         label="Requirements / Instructions"
+//       />
+
+//       {/* BUTTONS */}
+//       <div className="flex justify-end gap-4">
+//         {editCourse && (
+//           <button
+//             type="button"
+//             onClick={() => dispatch(setStep(2))}
+//             className="bg-richblack-200 text-richblack-800 px-6 py-3 rounded-md font-semibold"
+//           >
+//             Continue Without Saving
+//           </button>
+//         )}
+//         <button className="bg-yellow-50 px-6 py-3 rounded-md font-semibold hover:scale-95 transition-all">
+//           {!editCourse ? (
+//             <p className="flex items-center gap-2">
+//               Next <IoIosArrowForward />
+//             </p>
+//           ) : (
+//             "Save Changes"
+//           )}
+//         </button>
+//       </div>
+//     </form>
+//   );
+// };
+
+// export default CourseInformationForm;
+
+
+
+// import React, { useEffect, useState } from "react";
+// import { useForm } from "react-hook-form";
+// import { HiOutlineCurrencyRupee } from "react-icons/hi";
+// import {
+//   addCourse,
+//   editCourseDetails,
+//   fetchCourseCategories,
+// } from "../../../../../services/operations/courseDetailsAPI";
+// import { useDispatch, useSelector } from "react-redux";
+// import RequirmentsField from "./RequirmentsField";
+// import { setCourse, setStep } from "../../../../../redux/slices/courseSlice";
+// import UploadField from "./UploadField";
+// import { COURSE_STATUS } from "../../../../../utils/constants";
+// import ChipInput from "./ChipInput";
+// import { IoIosArrowForward } from "react-icons/io";
+
+// const CourseInformationForm = () => {
+//   const [loading, setLoading] = useState(false);
+//   const [courseCategories, setCourseCategories] = useState([]);
+
+//   const { course, editCourse } = useSelector((state) => state.course);
+//   const { token } = useSelector((state) => state.auth);
+//   const dispatch = useDispatch();
+
+//   const {
+//     register,
+//     handleSubmit,
+//     setValue,
+//     getValues,
+//     formState: { errors },
+//   } = useForm();
+
+//   // -----------------------------
+//   // Fetch Categories
+//   // -----------------------------
+//   const getCategories = async () => {
+//     setLoading(true);
+//     const categories = await fetchCourseCategories();
+//     if (categories.length > 0) setCourseCategories(categories);
+//     setLoading(false);
+//   };
+
+//   // -----------------------------
+//   // Prefill values in edit mode
+//   // -----------------------------
+//   useEffect(() => {
+//     getCategories();
+
+//     if (editCourse && course) {
+//       setValue("courseTitle", course.courseName);
+//       setValue("courseShortDesc", course.courseDescription);
+//       setValue("coursePrice", course.price);
+//       setValue("courseTags", course.tag);
+//       setValue("courseBenefits", course.whatYouWillLearn);
+//       setValue("courseCategory", course.category?._id);
+
+//       // FIX: Convert array → objects for RequirmentsField
+//       setValue(
+//         "courseRequirements",
+//         course.instructions?.map((item) => ({ requirement: item })) || []
+//       );
+
+//       setValue("thumbnailImage", null);
+//     }
+//   }, []);
+
+//   // -----------------------------
+//   // Submit Handler
+//   // -----------------------------
+//   const handleOnSubmit = async (data) => {
+//     const formData = new FormData();
+
+//     // ---------------------------------------------
+//     // EDIT MODE
+//     // ---------------------------------------------
+//     if (editCourse) {
+//       formData.append("courseId", course._id);
+
+//       if (data.courseTitle !== course.courseName)
+//         formData.append("courseName", data.courseTitle);
+
+//       if (data.courseShortDesc !== course.courseDescription)
+//         formData.append("courseDescription", data.courseShortDesc);
+
+//       if (data.coursePrice !== course.price)
+//         formData.append("price", data.coursePrice);
+
+//       if (JSON.stringify(data.courseTags) !== JSON.stringify(course.tag))
+//         formData.append("tag", JSON.stringify(data.courseTags));
+
+//       if (data.courseBenefits !== course.whatYouWillLearn)
+//         formData.append("whatYouWillLearn", data.courseBenefits);
+
+//       if (data.courseCategory !== course.category?._id)
+//         formData.append("category", data.courseCategory);
+
+//       // FIX: Requirements conversion
+//       const newReqs = data.courseRequirements.map((item) => item.requirement);
+
+//       if (JSON.stringify(newReqs) !== JSON.stringify(course.instructions)) {
+//         formData.append("instructions", JSON.stringify(newReqs));
+//       }
+
+//       // FIX: Only update thumbnail if new file selected
+//       if (data.thumbnailImage && typeof data.thumbnailImage !== "string") {
+//         formData.append("thumbnailImage", data.thumbnailImage);
+//       }
+
+//       setLoading(true);
+//       const result = await editCourseDetails(formData, token);
+//       setLoading(false);
+
+//       if (result) {
+//         dispatch(setCourse(result));
+//         dispatch(setStep(2)); // GO TO COURSE BUILDER
+//       }
+//       return;
+//     }
+
+//     // ---------------------------------------------
+//     // CREATE NEW COURSE
+//     // ---------------------------------------------
+//     formData.append("courseName", data.courseTitle);
+//     formData.append("courseDescription", data.courseShortDesc);
+//     formData.append("price", data.coursePrice);
+
+//     formData.append("tag", JSON.stringify(data.courseTags));
+
+//     const reqs = data.courseRequirements.map((r) => r.requirement);
+//     formData.append("instructions", JSON.stringify(reqs));
+
+//     formData.append("whatYouWillLearn", data.courseBenefits);
+//     formData.append("category", data.courseCategory);
+
+//     formData.append("thumbnailImage", data.thumbnailImage);    
+//     formData.append("status", COURSE_STATUS.DRAFT);
+
+//     setLoading(true);
+//     const result = await addCourse(formData, token);
+//     setLoading(false);
+
+//     if (result) {
+//       dispatch(setCourse(result));
+//       dispatch(setStep(2));
+//     }
+//   };
+
+//   return (
+//     <form
+//       className="w-full p-4 bg-richblack-800 border border-richblack-700 rounded-md flex flex-col gap-6"
+//       onSubmit={handleSubmit(handleOnSubmit)}
+//     >
+//       {/* TITLE */}
+//       <label>
+//         <p className="mb-1 text-[0.875rem] text-richblack-5">Course Title</p>
+//         <input
+//           {...register("courseTitle", { required: true })}
+//           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
+//           placeholder="Enter Course Title"
+//         />
+//       </label>
+
+//       {/* DESCRIPTION */}
+//       <label>
+//         <p className="mb-1 text-[0.875rem] text-richblack-5">Short Description</p>
+//         <textarea
+//           {...register("courseShortDesc", { required: true })}
+//           rows="3"
+//           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
+//         />
+//       </label>
+
+//       {/* PRICE */}
+//       <label className="relative">
+//         <p className="mb-1 text-[0.875rem] text-richblack-5">Course Price</p>
+//         <HiOutlineCurrencyRupee className="absolute left-2 top-[2.6rem] text-richblack-300 text-xl" />
+//         <input
+//           {...register("coursePrice", { required: true })}
+//           className="w-full bg-richblack-700 rounded p-[12px] pl-8 text-richblack-5"
+//         />
+//       </label>
+
+//       {/* CATEGORY */}
+//       <label>
+//         <p className="text-[0.875rem] text-richblack-5 mb-1">Category</p>
+//         <select
+//           {...register("courseCategory", { required: true })}
+//           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
+//         >
+//           <option value="" disabled>
+//             Choose Category
+//           </option>
+//           {!loading &&
+//             courseCategories.map((cat) => (
+//               <option key={cat._id} value={cat._id}>
+//                 {cat.name}
+//               </option>
+//             ))}
+//         </select>
+//       </label>
+
+//       {/* TAGS */}
+//       <ChipInput
+//         label="Tags"
+//         name="courseTags"
+//         register={register}
+//         setValue={setValue}
+//         getValues={getValues}
+//         errors={errors}
+//       />
+
+//       {/* THUMBNAIL */}
+//       <UploadField
+//         name="thumbnailImage"
+//         label="Course Thumbnail"
+//         register={register}
+//         setValue={setValue}
+//         errors={errors}
+//         editData={editCourse ? course.thumbnail : null}
+//       />
+
+//       {/* BENEFITS */}
+//       <label>
+//         <p className="text-[0.875rem] mb-1 text-richblack-5">
+//           What You Will Learn
+//         </p>
+//         <textarea
+//           {...register("courseBenefits", { required: true })}
+//           rows="3"
+//           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
+//           placeholder="Enter benefits"
+//         />
+//       </label>
+
+//       {/* REQUIREMENTS */}
+//       <RequirmentsField
+//         name="courseRequirements"
+//         register={register}
+//         setValue={setValue}
+//         getValues={getValues}
+//         errors={errors}
+//         label="Requirements / Instructions"
+//       />
+
+//       {/* BUTTONS */}
+//       <div className="flex justify-end gap-4">
+//         {editCourse && (
+//           <button
+//             type="button"
+//             onClick={() => dispatch(setStep(2))}
+//             className="bg-richblack-200 text-richblack-800 px-6 py-3 rounded-md font-semibold"
+//           >
+//             Continue Without Saving
+//           </button>
+//         )}
+
+//         <button className="bg-yellow-50 px-6 py-3 rounded-md font-semibold hover:scale-95 transition-all">
+//           {!editCourse ? (
+//             <p className="flex items-center gap-2">
+//               Next <IoIosArrowForward />
+//             </p>
+//           ) : (
+//             "Save Changes"
+//           )}
+//         </button>
+//       </div>
+//     </form>
+//   );
+// };
+
+// export default CourseInformationForm;
+
+
+
+//test buttom
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { HiOutlineCurrencyRupee } from "react-icons/hi";
@@ -1033,8 +1573,9 @@ import { setCourse, setStep } from "../../../../../redux/slices/courseSlice";
 import UploadField from "./UploadField";
 import { COURSE_STATUS } from "../../../../../utils/constants";
 import ChipInput from "./ChipInput";
-import toast from "react-hot-toast";
 import { IoIosArrowForward } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
+
 
 const CourseInformationForm = () => {
   const [loading, setLoading] = useState(false);
@@ -1043,6 +1584,7 @@ const CourseInformationForm = () => {
   const { course, editCourse } = useSelector((state) => state.course);
   const { token } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
+const navigate = useNavigate();
 
   const {
     register,
@@ -1056,40 +1598,45 @@ const CourseInformationForm = () => {
   // Fetch Categories
   // -----------------------------
   const getCategories = async () => {
-    setLoading(true);
     const categories = await fetchCourseCategories();
-    if (categories.length > 0) setCourseCategories(categories);
-    setLoading(false);
+    setCourseCategories(categories);
   };
 
   // -----------------------------
-  // Prefill values in edit mode
+  // PREFILL EDIT MODE
   // -----------------------------
   useEffect(() => {
     getCategories();
 
-    if (editCourse) {
+    if (editCourse && course) {
       setValue("courseTitle", course.courseName);
       setValue("courseShortDesc", course.courseDescription);
       setValue("coursePrice", course.price);
       setValue("courseTags", course.tag);
       setValue("courseBenefits", course.whatYouWillLearn);
       setValue("courseCategory", course.category?._id);
-      setValue("courseRequirements", course.instructions);
+
+      // Requirements are now STRINGS
+      setValue("courseRequirements", course.instructions || []);
+
+      // Thumbnail is NOT required in edit
       setValue("thumbnailImage", null);
     }
   }, []);
 
   // -----------------------------
-  // Submit Handler
+  // SUBMIT HANDLER
   // -----------------------------
   const handleOnSubmit = async (data) => {
     const formData = new FormData();
 
+    // ----------------------------------
     // EDIT MODE
+    // ----------------------------------
     if (editCourse) {
       formData.append("courseId", course._id);
 
+      // Only append fields that changed
       if (data.courseTitle !== course.courseName)
         formData.append("courseName", data.courseTitle);
 
@@ -1108,16 +1655,13 @@ const CourseInformationForm = () => {
       if (data.courseCategory !== course.category?._id)
         formData.append("category", data.courseCategory);
 
-      if (
-        JSON.stringify(data.courseRequirements) !==
-        JSON.stringify(course.instructions)
-      )
-        formData.append(
-          "instructions",
-          JSON.stringify(data.courseRequirements)
-        );
+      // FIX: Requirements (already array of strings)
+      const newReqs = data.courseRequirements;
+      if (JSON.stringify(newReqs) !== JSON.stringify(course.instructions)) {
+        formData.append("instructions", JSON.stringify(newReqs));
+      }
 
-      // NEW THUMBNAIL
+      // FIX: Thumbnail only update if new file selected
       if (data.thumbnailImage && typeof data.thumbnailImage !== "string") {
         formData.append("thumbnailImage", data.thumbnailImage);
       }
@@ -1128,19 +1672,25 @@ const CourseInformationForm = () => {
 
       if (result) {
         dispatch(setCourse(result));
-        dispatch(setStep(2));
+        //dispatch(setStep(2)); // GO TO COURSE BUILDER
+        navigate("/dashboard/my-courses"); 
       }
       return;
     }
 
-    // CREATE NEW COURSE
+    // ----------------------------------
+    // CREATE MODE
+    // ----------------------------------
     formData.append("courseName", data.courseTitle);
     formData.append("courseDescription", data.courseShortDesc);
     formData.append("price", data.coursePrice);
 
-    // IMPORTANT FIX
     formData.append("tag", JSON.stringify(data.courseTags));
-    formData.append("instructions", JSON.stringify(data.courseRequirements));
+
+    formData.append(
+      "instructions",
+      JSON.stringify(data.courseRequirements)
+    );
 
     formData.append("whatYouWillLearn", data.courseBenefits);
     formData.append("category", data.courseCategory);
@@ -1200,15 +1750,13 @@ const CourseInformationForm = () => {
           {...register("courseCategory", { required: true })}
           className="w-full bg-richblack-700 rounded p-[12px] text-richblack-5"
         >
-          <option value="" disabled>
-            Choose Category
-          </option>
-          {!loading &&
-            courseCategories.map((cat) => (
-              <option key={cat._id} value={cat._id}>
-                {cat.name}
-              </option>
-            ))}
+          <option value="" disabled>Select Category</option>
+
+          {courseCategories.map((cat) => (
+            <option key={cat._id} value={cat._id}>
+              {cat.name}
+            </option>
+          ))}
         </select>
       </label>
 
@@ -1229,6 +1777,7 @@ const CourseInformationForm = () => {
         register={register}
         setValue={setValue}
         errors={errors}
+        // NOT REQUIRED IN EDIT MODE
         editData={editCourse ? course.thumbnail : null}
       />
 
@@ -1266,6 +1815,7 @@ const CourseInformationForm = () => {
             Continue Without Saving
           </button>
         )}
+
         <button className="bg-yellow-50 px-6 py-3 rounded-md font-semibold hover:scale-95 transition-all">
           {!editCourse ? (
             <p className="flex items-center gap-2">

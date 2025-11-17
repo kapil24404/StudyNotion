@@ -298,9 +298,12 @@ const UploadField = ({
     onDrop,
   });
 
-  useEffect(() => {
-    register(name, { required: true });
-  }, [register, name]);
+  // useEffect(() => {
+  //   register(name, { required: true });
+  // }, [register, name]);
+useEffect(() => {
+  register(name, { required: !editData }); 
+}, [register, name, editData]);
 
   useEffect(() => {
     if (selectedFile) {
