@@ -54,8 +54,11 @@ export const courseEndpoints = {
 };
 
 // CATALOG PAGE DATA
+// export const catalogData = {
+//   CATALOGPAGEDATA_API: BASE_URL + "/category/getCategoryPageDetails",
+// };
 export const catalogData = {
-  CATALOGPAGEDATA_API: BASE_URL + "/category/getCategoryPageDetails",
+  CATALOGPAGEDATA_API: BASE_URL + "/category/categoryPageDetails",
 };
 
 // STUDENTS ENDPOINTS
