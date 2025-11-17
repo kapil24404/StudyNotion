@@ -1,66 +1,66 @@
-const express = require("express");
-const app = express();
+// const express = require("express");
+// const app = express();
 
-require("dotenv").config();
+// require("dotenv").config();
 
-const userRouts = require("./routes/User");
-const profileRouts = require("./routes/Profile");
-const paymentRouts = require("./routes/Payment");
-const courseRouts = require("./routes/Course");
-const contactUsRouts = require("./routes/Contact");
+// const userRouts = require("./routes/User");
+// const profileRouts = require("./routes/Profile");
+// const paymentRouts = require("./routes/Payment");
+// const courseRouts = require("./routes/Course");
+// const contactUsRouts = require("./routes/Contact");
 
-const database = require("./config/database");
-const cookieParser = require("cookie-parser");
-const { cloudinaryConnect } = require("./config/cloudinary");
-const fileUpload = require("express-fileupload");
-const cors = require("cors");
+// const database = require("./config/database");
+// const cookieParser = require("cookie-parser");
+// const { cloudinaryConnect } = require("./config/cloudinary");
+// const fileUpload = require("express-fileupload");
+// const cors = require("cors");
+// const categoryRoutes = require("./routes/Category");
 
+// const PORT = process.env.PORT ;
 
-const PORT = process.env.PORT ;
+// // Database connect
+// database.connect();
 
-// Database connect
-database.connect();
+// // Middlewares
+// app.use(express.json());
+// app.use(cookieParser());
+// app.use(
+//   cors({
+//     origin: "*",
+//     credentials: true,
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     allowedHeaders: "Content-Type,Authorization",
+//   })
+// );
 
-// Middlewares
-app.use(express.json());
-app.use(cookieParser());
-app.use(
-  cors({
-    origin: "*",
-    credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-  })
-);
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//     tempFileDir: "/tmp/",
+//   })
+// );
 
-app.use(
-  fileUpload({
-    useTempFiles: true,
-    tempFileDir: "/tmp/",
-  })
-);
+// // Cloudinary connection
+// cloudinaryConnect();
 
-// Cloudinary connection
-cloudinaryConnect();
+// // Mount routs
+// app.use("/api/v1/auth", userRouts);
+// app.use("/api/v1/profile", profileRouts);
+// app.use("/api/v1/course", courseRouts);
+// app.use("/api/v1/payment", paymentRouts);
+// app.use("/api/v1/reach", contactUsRouts);
+// app.use("/api/v1/category", categoryRoutes);
+// // Default route
+// app.get("/", (req, res) => {
+//   return res.json({
+//     success: true,
+//     message: "Your server is up and running...",
+//   });
+// });
 
-// Mount routs
-app.use("/api/v1/auth", userRouts);
-app.use("/api/v1/profile", profileRouts);
-app.use("/api/v1/course", courseRouts);
-app.use("/api/v1/payment", paymentRouts);
-app.use("/api/v1/reach", contactUsRouts);
-
-// Default route
-app.get("/", (req, res) => {
-  return res.json({
-    success: true,
-    message: "Your server is up and running...",
-  });
-});
-
-app.listen(PORT, () => {
-  console.log(`App is running at ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`App is running at ${PORT}`);
+// });
 
 
 // const express = require("express");
@@ -521,3 +521,260 @@ app.listen(PORT, () => {
 // app.listen(PORT, () => {
 //   console.log(`🚀 Server is running on PORT ${PORT}`);
 // });
+
+
+
+// const express = require("express");
+// const app = express();
+
+// require("dotenv").config();
+
+// const userRouts = require("./routes/User");
+// const profileRouts = require("./routes/Profile");
+// const paymentRouts = require("./routes/Payment");
+// const courseRouts = require("./routes/Course");
+// const contactUsRouts = require("./routes/Contact");
+// const categoryRoutes = require("./routes/Category");  // ✅ ADDED
+
+// const database = require("./config/database");
+// const cookieParser = require("cookie-parser");
+// const { cloudinaryConnect } = require("./config/cloudinary");
+// const fileUpload = require("express-fileupload");
+// const cors = require("cors");
+
+// const PORT = process.env.PORT;
+
+// // Connect Database
+// database.connect();
+
+// // Middlewares
+// app.use(express.json());
+// app.use(cookieParser());
+// app.use(
+//   cors({
+//     origin: "*",
+//     credentials: true,
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     allowedHeaders: "Content-Type,Authorization",
+//   })
+// );
+
+// // File Upload
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//     tempFileDir: "/tmp/",
+//   })
+// );
+
+// // Cloudinary
+// cloudinaryConnect();
+
+// // -----------------------------
+// // Mount Routes (IMPORTANT)
+// // -----------------------------
+// app.use("/api/v1/auth", userRouts);
+// app.use("/api/v1/profile", profileRouts);
+// app.use("/api/v1/course", courseRouts);
+// app.use("/api/v1/payment", paymentRouts);
+// app.use("/api/v1/reach", contactUsRouts);
+
+// // Default route
+// app.get("/", (req, res) => {
+//   return res.json({
+//     success: true,
+//     message: "Your server is up and running...",
+//   });
+// });
+
+// // Start Server
+// app.listen(PORT, () => {
+//   console.log(`App is running at ${PORT}`);
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+// const express = require("express");
+// const app = express();
+
+// require("dotenv").config();
+
+// // ⭐ Load ALL models so mongoose registers them once (IMPORTANT)
+// require("./models/User");
+// require("./models/Course");
+// require("./models/Section");
+// require("./models/SubSection");
+// require("./models/Category");
+// require("./models/RatingAndReview");
+
+// const userRouts = require("./routes/User");
+// const profileRouts = require("./routes/Profile");
+// const paymentRouts = require("./routes/Payment");
+// const courseRouts = require("./routes/Course");
+// const contactUsRouts = require("./routes/Contact");
+// const categoryRoutes = require("./routes/Category");
+
+// const database = require("./config/database");
+// const cookieParser = require("cookie-parser");
+// const { cloudinaryConnect } = require("./config/cloudinary");
+// const fileUpload = require("express-fileupload");
+// const cors = require("cors");
+
+// const PORT = process.env.PORT;
+
+// // Database connect
+// database.connect();
+
+// // Middlewares
+// app.use(express.json());
+// app.use(cookieParser());
+// app.use(
+//   cors({
+//     origin: "*",
+//     credentials: true,
+//     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//     allowedHeaders: "Content-Type,Authorization",
+//   })
+// );
+
+// app.use(
+//   fileUpload({
+//     useTempFiles: true,
+//     tempFileDir: "/tmp/",
+//   })
+// );
+
+// // Cloudinary connection
+// cloudinaryConnect();
+
+// // Mount routes
+// app.use("/api/v1/auth", userRouts);
+// app.use("/api/v1/profile", profileRouts);
+// app.use("/api/v1/course", courseRouts);
+// app.use("/api/v1/payment", paymentRouts);
+// app.use("/api/v1/reach", contactUsRouts);
+// app.use("/api/v1/category", categoryRoutes);
+
+// // Default route
+// app.get("/", (req, res) => {
+//   return res.json({
+//     success: true,
+//     message: "Your server is up and running...",
+//   });
+// });
+
+// app.listen(PORT, () => {
+//   console.log(`App is running at ${PORT}`);
+// });
+
+
+const express = require("express");
+const app = express();
+
+require("dotenv").config();
+
+// ------------------------
+// Load ALL Models Once
+// ------------------------
+require("./models/User");
+require("./models/Course");
+require("./models/Section");
+require("./models/SubSection");
+require("./models/Category");
+require("./models/RatingAndReview");
+
+// ------------------------
+// Import Routes
+// ------------------------
+const userRoutes = require("./routes/User");
+const profileRoutes = require("./routes/Profile");
+const paymentRoutes = require("./routes/Payment");
+const courseRoutes = require("./routes/Course");
+const contactRoutes = require("./routes/Contact");
+const categoryRoutes = require("./routes/Category");
+
+// ------------------------
+// Other Dependencies
+// ------------------------
+const database = require("./config/database");
+const cookieParser = require("cookie-parser");
+const { cloudinaryConnect } = require("./config/cloudinary");
+const fileUpload = require("express-fileupload");
+const cors = require("cors");
+
+// ------------------------
+// Server Port
+// ------------------------
+const PORT = process.env.PORT || 4000;
+
+// ------------------------
+// Connect to Database
+// ------------------------
+database.connect();
+
+// ------------------------
+// Middlewares
+// ------------------------
+app.use(express.json());
+app.use(cookieParser());
+
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
+
+// ------------------------
+// File Upload Middleware
+// ------------------------
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp/",
+    createParentPath: true,
+    debug: true,   // 🔥 helps identify issues
+  })
+);
+
+// ------------------------
+// Cloudinary Init
+// ------------------------
+cloudinaryConnect();
+
+// ------------------------
+// Mount Routes
+// ------------------------
+app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/profile", profileRoutes);
+app.use("/api/v1/course", courseRoutes);
+app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/reach", contactRoutes);
+app.use("/api/v1/category", categoryRoutes);
+//app.use("/api/v1/course", courseRouts);
+
+// ------------------------
+// Default Route
+// ------------------------
+app.get("/", (req, res) => {
+  return res.json({
+    success: true,
+    message: "Your server is up and running...",
+  });
+});
+
+// ------------------------
+// Start Server
+// ------------------------
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});

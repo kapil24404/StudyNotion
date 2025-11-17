@@ -38,6 +38,30 @@ export const fetchCourseCategories = async () => {
 };
 
 // Edit Course Details
+// export const editCourseDetails = async (data, token) => {
+//   let result = null;
+//   const toastId = toast.loading("Loading...");
+
+//   try {
+//     const response = await apiConnector("POST", EDIT_COURSE_API, data, {
+//       "Content-Type": "multipart/form-data",
+//       Authorization: `Bearer ${token}`,
+//     });
+
+//     if (!response?.data?.success) {
+//       throw new Error("Could Not Update Course Details");
+//     }
+
+//     toast.success("Course Details Updated Successfully");
+//     result = response?.data?.data;
+//   } catch (error) {
+//     toast.error(error.message);
+//   }
+
+//   toast.dismiss(toastId);
+//   return result;
+// };
+
 export const editCourseDetails = async (data, token) => {
   let result = null;
   const toastId = toast.loading("Loading...");
@@ -48,12 +72,20 @@ export const editCourseDetails = async (data, token) => {
       Authorization: `Bearer ${token}`,
     });
 
+    console.log("EDIT COURSE RESPONSE →", response.data);
+
     if (!response?.data?.success) {
       throw new Error("Could Not Update Course Details");
     }
 
     toast.success("Course Details Updated Successfully");
-    result = response?.data?.data;
+
+    result =
+      response.data.data ||
+      response.data.updatedCourse ||
+      response.data.course ||
+      null;
+
   } catch (error) {
     toast.error(error.message);
   }
@@ -61,6 +93,7 @@ export const editCourseDetails = async (data, token) => {
   toast.dismiss(toastId);
   return result;
 };
+
 
 // ADD COURSE
 export const addCourse = async (data, token) => {
@@ -87,7 +120,6 @@ export const addCourse = async (data, token) => {
   return result;
 };
 
-// CREATE SECTION
 export const createSection = async (data, token) => {
   let result = null;
   const toastId = toast.loading("Loading...");
@@ -109,6 +141,7 @@ export const createSection = async (data, token) => {
   toast.dismiss(toastId);
   return result;
 };
+
 
 // UPDATE SECTION
 export const updateSection = async (data, token) => {
@@ -158,28 +191,35 @@ export const deleteSection = async (data, token) => {
   return result;
 };
 
-// Create Subsection
+
+
 export const createSubSection = async (data, token) => {
+  const toastId = toast.loading("Uploading...");
   let result = null;
-  const toastid = toast.loading("Loading...");
 
   try {
-    const response = await apiConnector("POST", CREATE_SUBSECTION_API, data, {
-      Authorization: `Bearer ${token}`,
-    });
+    const response = await apiConnector(
+      "POST",
+      CREATE_SUBSECTION_API,
+      data,
+      {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      }
+    );
 
     if (!response?.data?.success) {
       throw new Error("Could Not Add Lecture");
     }
 
     toast.success("Lecture Added");
-
-    result = response?.data?.data;
+    result = response.data.data;
   } catch (error) {
-    toast.error(error.message);
+    console.log("CREATE_SUBSECTION_API ERROR →", error.response?.data);
+    toast.error("Failed to add lecture");
   }
 
-  toast.dismiss(toastid);
+  toast.dismiss(toastId);
   return result;
 };
 

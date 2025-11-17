@@ -98,10 +98,122 @@
 
 
 // Import required modules
+// const express = require("express");
+// const router = express.Router();
+
+// // Controllers
+// const {
+//   createCourse,
+//   editCourse,
+//   deleteCourse,
+//   showAllCourses,
+//   getInstructorCourse,
+//   getCourseDetails,
+//   getFullCourseDetails,
+// } = require("../controllers/Course");
+
+// // Middlewares
+// const { auth, isInstructor, isAdmin, isStudent } = require("../middlewares/auth");
+
+// // -----------------------------
+// // Course Routes
+// // -----------------------------
+// router.post("/createCourse", auth, isInstructor, createCourse);
+// router.post("/editCourse", auth, isInstructor, editCourse);
+// router.delete("/deleteCourse", auth, isInstructor, deleteCourse);
+
+// router.get("/getAllCourses", showAllCourses);
+// router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourse);
+// router.post("/getCourseDetails", getCourseDetails);
+// router.post("/getFullCourseDetails", auth, getFullCourseDetails);
+
+// module.exports = router;
+
+
+
+
+//postman check
+
+
+// const express = require("express");
+// const router = express.Router();
+
+// const {
+//   createCourse,
+//   editCourse,
+//   deleteCourse,
+//   showAllCourses,
+//   getInstructorCourse,
+//   getCourseDetails,
+//   getFullCourseDetails,
+// } = require("../controllers/Course");
+
+// const { auth, isInstructor } = require("../middlewares/auth");
+
+// // Course Routes
+// router.post("/createCourse", auth, isInstructor, createCourse);
+// router.post("/editCourse", auth, isInstructor, editCourse);
+// router.delete("/deleteCourse", auth, isInstructor, deleteCourse);
+
+// router.get("/getAllCourses", showAllCourses);
+// router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourse);
+
+// router.post("/getCourseDetails", getCourseDetails);
+// router.post("/getFullCourseDetails", auth, getFullCourseDetails);
+
+// module.exports = router;
+
+
+
+//section worked properly
+
+// const express = require("express");
+// const router = express.Router();
+
+// const {
+//   createCourse,
+//   editCourse,
+//   deleteCourse,
+//   showAllCourses,
+//   getInstructorCourse,
+//   getCourseDetails,
+//   getFullCourseDetails
+// } = require("../controllers/Course");
+
+// const {
+//   createSection,
+//   updateSection,
+//   deleteSection
+// } = require("../controllers/Section");
+
+// const { auth, isInstructor } = require("../middlewares/auth");
+
+// router.post("/createCourse", auth, isInstructor, createCourse);
+// router.post("/editCourse", auth, isInstructor, editCourse);
+// router.delete("/deleteCourse", auth, isInstructor, deleteCourse);
+
+// router.post("/createSection", auth, isInstructor, createSection);
+// router.post("/updateSection", auth, isInstructor, updateSection);
+// router.post("/deleteSection", auth, isInstructor, deleteSection);
+
+
+// router.get("/getAllCourses", showAllCourses);
+// router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourse);
+// router.post("/getCourseDetails", getCourseDetails);
+// router.post("/getFullCourseDetails", auth, getFullCourseDetails);
+
+// module.exports = router;
+
+// console.log("📌 Course Routes LOADED");
+
+
+
+
+
 const express = require("express");
 const router = express.Router();
 
-// Controllers
+// ---------------- Controllers ----------------
 const {
   createCourse,
   editCourse,
@@ -112,19 +224,89 @@ const {
   getFullCourseDetails,
 } = require("../controllers/Course");
 
-// Middlewares
-const { auth, isInstructor, isAdmin, isStudent } = require("../middlewares/auth");
+const {
+  createSection,
+  updateSection,
+  deleteSection,
+} = require("../controllers/Section");
 
-// -----------------------------
-// Course Routes
-// -----------------------------
+const {
+  createSubSection,
+  updateSubSection,
+  deleteSubSection,
+} = require("../controllers/Subsection");   // ✅ FIXED
+
+// ---------------- Middlewares ----------------
+const { auth, isInstructor } = require("../middlewares/auth");
+
+// ---------------- Course Routes ----------------
+
 router.post("/createCourse", auth, isInstructor, createCourse);
 router.post("/editCourse", auth, isInstructor, editCourse);
 router.delete("/deleteCourse", auth, isInstructor, deleteCourse);
 
+// Sections
+router.post("/createSection", auth, isInstructor, createSection);
+router.post("/updateSection", auth, isInstructor, updateSection);
+router.post("/deleteSection", auth, isInstructor, deleteSection);
+
+// SubSections (Lecture)
+router.post("/createSubSection", auth, isInstructor, createSubSection);
+router.post("/updateSubSection", auth, isInstructor, updateSubSection);
+router.post("/deleteSubSection", auth, isInstructor, deleteSubSection);
+
+// Course Details
 router.get("/getAllCourses", showAllCourses);
 router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourse);
 router.post("/getCourseDetails", getCourseDetails);
 router.post("/getFullCourseDetails", auth, getFullCourseDetails);
 
 module.exports = router;
+
+console.log("📌 Course Routes Loaded Successfully");
+
+
+
+// const express = require("express");
+// const router = express.Router();
+
+// // Controllers
+// const {
+//   createCourse,
+//   editCourse,
+//   deleteCourse,
+//   showAllCourses,
+//   getInstructorCourse,
+//   getCourseDetails,
+//   getFullCourseDetails,
+// } = require("../controllers/Course");
+
+// // Middlewares
+// const { auth, isInstructor, isAdmin, isStudent } = require("../middlewares/auth");
+
+// // -------------------------------------
+// // Course Routes (Final & Correct Version)
+// // -------------------------------------
+
+// // Create Course
+// router.post("/createCourse", auth, isInstructor, createCourse);
+
+// // Edit Course
+// router.put("/editCourse/:courseId", auth, isInstructor, editCourse);
+
+// // Delete Course
+// router.delete("/deleteCourse/:courseId", auth, isInstructor, deleteCourse);
+
+// // Get All Published Courses
+// router.get("/getAllCourses", showAllCourses);
+
+// // Get Courses of a Particular Instructor
+// router.get("/getInstructorCourses", auth, isInstructor, getInstructorCourse);
+
+// // Get Course Details (Public)
+// router.post("/getCourseDetails", getCourseDetails);
+
+// // Get Full Course Details (Only for enrolled users)
+// router.post("/getFullCourseDetails", auth, getFullCourseDetails);
+
+// module.exports = router;
